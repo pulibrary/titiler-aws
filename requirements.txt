@@ -1,1 +1,7 @@
 -e .
+
+# aws cdk
+aws-cdk.core==1.126.0
+aws-cdk.aws_ec2==1.126.0
+aws-cdk.aws_iam==1.126.0
+aws-cdk.aws_s3_assets==1.126.0

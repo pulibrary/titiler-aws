@@ -1,0 +1,33 @@
+apt-get update -y
+apt-get install -y \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+apt-get update -y
+apt-get install -y docker-ce docker-ce-cli containerd.io
+
+docker run \
+  --env CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif,.TIF,.tiff" \
+  --env GDAL_CACHEMAX=400 \
+  --env GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR"  \
+  --env GDAL_HTTP_MERGE_CONSECUTIVE_RANGES="YES"  \
+  --env GDAL_HTTP_MULTIPLEX="YES" \
+  --env GDAL_HTTP_VERSION="2" \
+  --env PYTHONWARNINGS="ignore" \
+  --env VSI_CACHE="TRUE" \
+  --env VSI_CACHE_SIZE="5000000" \
+  --env LOG_LEVEL="error" \
+  --env WORKERS_PER_CORE=2 \
+  --env AWS_ACCESS_KEY_ID="ID" \
+  --env AWS_SECRET_ACCESS_KEY="KEY" \
+  -p 80:80 \
+  -itd  public.ecr.aws/developmentseed/titiler:latest

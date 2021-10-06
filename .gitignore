@@ -1,3 +1,7 @@
+# AWS CDK
+cdk.out/
+cdk.context.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -93,4 +97,3 @@ ENV/
 env.bak/
 venv.bak/
 
-cdk.out/
