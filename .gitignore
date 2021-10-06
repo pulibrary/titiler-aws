@@ -1,6 +1,7 @@
 # AWS CDK
 cdk.out/
 cdk.context.json
+configure.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
