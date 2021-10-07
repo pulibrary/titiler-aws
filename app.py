@@ -11,7 +11,6 @@ from aws_cdk import core
 
 from titiler_ec2.titiler_ec2_stack import TitilerEc2Stack
 
-
 app = core.App()
 TitilerEc2Stack(app, "TitilerEc2Stack",
     # If you don't specify 'env', this stack will be environment-agnostic.

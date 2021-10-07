@@ -36,6 +36,7 @@ class TitilerEc2Stack(core.Stack):
 
         # Instance
         ubuntu_linux = ec2.MachineImage.generic_linux({
+            "us-east-1": "ami-03c53cb2507dda8ae",
             "us-east-2": "ami-08853a6c93b952e8b"
             })
 
