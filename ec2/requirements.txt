@@ -8,3 +8,5 @@ aws-cdk.aws_s3_assets==1.126.0
 aws-cdk.aws_elasticloadbalancingv2==1.126.0
 aws_cdk.aws_elasticloadbalancingv2_targets==1.126.0
 aws_cdk.aws_autoscaling==1.126.0
+aws_cdk.aws_apigatewayv2==1.126.0
+aws_cdk.aws_apigatewayv2_integrations==1.126.0
