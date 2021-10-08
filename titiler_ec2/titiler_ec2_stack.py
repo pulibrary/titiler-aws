@@ -1,5 +1,12 @@
 from pathlib import Path
-from aws_cdk import (core, aws_ec2 as ec2, aws_iam as iam)
+from aws_cdk import (
+        core,
+        aws_ec2 as ec2,
+        aws_iam as iam,
+        aws_elasticloadbalancingv2 as elbv2,
+        aws_elasticloadbalancingv2_targets as elbv2_targets,
+        aws_autoscaling as autoscaling
+        )
 
 class TitilerEc2Stack(core.Stack):
 
@@ -34,27 +41,38 @@ class TitilerEc2Stack(core.Stack):
         role = iam.Role(self, "tiler-role", assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"))
         role.add_managed_policy(iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3ReadOnlyAccess"))
 
-        # Instance
+        # Instances
         ubuntu_linux = ec2.MachineImage.generic_linux({
             "us-east-1": "ami-03c53cb2507dda8ae",
             "us-east-2": "ami-08853a6c93b952e8b"
             })
 
-        instance = ec2.Instance(self, "titiler-instance",
-            machine_image = ubuntu_linux,
-            instance_type = ec2.InstanceType("t3.micro"),
-            vpc = vpc,
-            vpc_subnets = ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
-            role = role,
-            security_group = sg,
-            key_name = 'titiler-key-pair'
-            )
-
         # User Data
         script = Path('configure.sh').read_text()
-        instance.add_user_data(script)
+        user_data = ec2.UserData.for_linux()
+        user_data.add_commands(script)
 
-        # Messages after deploy
-        output = core.CfnOutput(self, "WebHost_information",
-            value=instance.instance_public_ip,
-            description="Web server's Public IP")
+        # Instances / Auto-scaling Group
+        asg = autoscaling.AutoScalingGroup(
+            self,
+            "ASG",
+            vpc=vpc,
+            machine_image = ubuntu_linux,
+            instance_type = ec2.InstanceType("t3.xlarge"),
+            user_data = user_data,
+            role = role,
+            security_group = sg,
+            key_name = 'titiler-key-pair',
+            min_capacity = 2,
+            max_capacity = 4
+        )
+
+        # Load Balancer
+        lb = elbv2.ApplicationLoadBalancer(
+            self, "LB",
+            vpc=vpc,
+            internet_facing=True)
+
+        listener = lb.add_listener("Listener", port=80)
+        listener.add_targets("Target", port=80, targets=[asg])
+        listener.connections.allow_from_any_ipv4(ec2.Port.tcp(80), "allow http from world")
