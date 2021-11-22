@@ -1,5 +1,4 @@
 import os
-from aws_cdk import core as cdk
 from aws_cdk import (
         core,
         aws_iam as iam,
@@ -10,8 +9,8 @@ from aws_cdk import (
         )
 
 
-class TitilerServiceStack(cdk.Stack):
-    def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
+class TitilerServiceStack(core.Stack):
+    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # Environment Variables
