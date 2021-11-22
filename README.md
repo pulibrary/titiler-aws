@@ -53,8 +53,10 @@ command.
 
 ## Useful commands
 
+Read the [CDK documentation](https://docs.aws.amazon.com/cdk/latest/guide/cli.html)
+
  * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk delete`      delete this stack from your default AWS account/region
+ * `cdk destroy`     delete this stack from your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
  * `cdk ls`          list all stacks in the app
