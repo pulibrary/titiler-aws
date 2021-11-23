@@ -11,19 +11,19 @@ Amazon CDK configurations for deploying TiTiler.
   brew install aws-cdk
   ```
 
-* Create a virtualenv on MacOS and Linux:
+* Install pipenv
   ```
-  python -m venv .venv
-  ```
-
-* Activate your virtualenv
-  ```
-  source .venv/bin/activate
+  pip install --user pipenv
   ```
 
 * Install the required python dependencies
   ```
-  pip install -r requirements.txt
+  pipenv sync
+  ```
+
+* Activate your virtualenv
+  ```
+  pipenv shell
   ```
 
 * Update your `.aws/config` to include:
@@ -45,8 +45,8 @@ Amazon CDK configurations for deploying TiTiler.
 ## Every time setup
 
 ```
-source .venv/bin/activate
-pip install -r requirements.txt
+pipenv sync
+pipenv shell
 ```
 
 ## Deploy TiTiler
