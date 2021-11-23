@@ -2,9 +2,7 @@
 
 Amazon CDK configurations for deploying TiTiler.
 
-## Development setup
-
-### First-time setup
+## First-time setup
 
 * Install language dependencies with asdf or according to versions listed in [.tool-versions](/.tool-verions)
 
@@ -28,14 +26,30 @@ Amazon CDK configurations for deploying TiTiler.
   pip install -r requirements.txt
   ```
 
-### Every time setup
+* Update your `.aws/config` to include:
+  ```
+  [titiler-deploy]
+  region = us-east-1
+  ```
+
+* Update your `.aws/credentials` to include credentials from LastPass -> Shared-ITIMS-Passwords\Figgy -> TiTilerAWS like
+  ```
+  [titiler-deploy]
+  aws_access_key_id = [username]
+  aws_secret_access_key = [password]
+  ```
+
+* Copy `.env.example` to `.env` and update the account number using the note from that LastPass entry.
+
+
+## Every time setup
 
 ```
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Deploy
+## Deploy TiTiler
 
 1. Synthesize the CloudFormation template for this code
   ```
@@ -44,7 +58,7 @@ pip install -r requirements.txt
 
 2. Deploy the stack
   ```
-  cdk deploy
+  cdk --profile titiler-deploy deploy
   ```
 
 To add additional dependencies, for example other CDK libraries, just add
