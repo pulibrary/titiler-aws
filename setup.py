@@ -6,7 +6,7 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="titiler_ec2",
+    name="titiler_service",
     version="0.0.1",
 
     description="An empty CDK Python app",
@@ -15,8 +15,8 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "titiler_ec2"},
-    packages=setuptools.find_packages(where="titiler_ec2"),
+    package_dir={"": "titiler_service"},
+    packages=setuptools.find_packages(where="titiler_service"),
 
     install_requires=[
         "aws-cdk.core==1.126.0",

@@ -9,10 +9,11 @@ from aws_cdk import core as cdk
 # being updated to use `cdk`.  You may delete this import if you don't need it.
 from aws_cdk import core
 
-from titiler_ec2.titiler_ec2_stack import TitilerEc2Stack
+from titiler_service.titiler_service_stack import TitilerServiceStack
+
 
 app = core.App()
-TitilerEc2Stack(app, "TitilerEc2Stack",
+TitilerServiceStack(app, "TitilerServiceStack",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
