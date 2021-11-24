@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a50854c3fc0d153e8bddd4d8a1db5cfa70e731988beea106cc21ea92380da658"
+            "sha256": "faf07d2d05b3274aa9cc4ea841ccd7d5a97cbbbb3b8df48de9434caba0dfe621"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -86,6 +86,22 @@
                 "sha256:db3b060b6cf465ad5bd360951870d0bd74a263317ba0a0600f6fea320724f8c6"
             ],
             "markers": "python_version >= '3.6'",
+            "version": "==1.126.0"
+        },
+        "aws-cdk.aws-cloudfront": {
+            "hashes": [
+                "sha256:222a764a3606eeaa90ab443945a3a6e22a17dc1b7bdb3e9c09500da51c7c4454",
+                "sha256:260565b68f608d6add1a4beb629bf2c2d7ff42d9592f1de94ba5e8fb7481d448"
+            ],
+            "index": "pypi",
+            "version": "==1.126.0"
+        },
+        "aws-cdk.aws-cloudfront-origins": {
+            "hashes": [
+                "sha256:60ccfe5ae73ac465293f15503cc304f294e4edc55e78e4e51b29f5310b6ca858",
+                "sha256:8234f36be57a33e09533026e2f311fd7f0b569d60645a08c2726ad3462c6f50f"
+            ],
+            "index": "pypi",
             "version": "==1.126.0"
         },
         "aws-cdk.aws-cloudwatch": {
