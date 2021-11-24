@@ -62,8 +62,7 @@ pipenv shell
   ```
 
 To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
+them with the `pipenv install` command.
 
 ## Useful commands
 
