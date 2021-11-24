@@ -7,8 +7,8 @@ from titiler_service.titiler_service_stack import TitilerServiceStack
 def test_synthesizes_properly():
     app = cdk.App()
 
-    # Create the ProcessorStack.
+    # Create the stack
     titiler_stack = TitilerServiceStack(app, "TitilerServiceStack")
 
-    # Prepare the stack for assertions.
+    # Synthesize the stack and build template
     template = Template.from_stack(titiler_stack)
