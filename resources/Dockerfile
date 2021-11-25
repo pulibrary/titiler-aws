@@ -13,3 +13,4 @@ RUN rm -rdf /var/task/numpy/doc/
 RUN rm -rdf /var/task/uvicorn
 
 COPY resources/handler.py /var/task/handler.py
+COPY resources/middleware.py /var/task/middleware.py
