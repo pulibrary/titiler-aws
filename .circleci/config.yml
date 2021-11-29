@@ -1,0 +1,25 @@
+---
+version: 2
+jobs:
+  build:
+    working_directory: ~/circleci-titiler-aws
+    machine:
+      image: ubuntu-2004:202104-01
+      environment:
+        PIPENV_VENV_IN_PROJECT: true
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          command: |
+            pip install pipenv
+            pipenv install
+      - save_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            pipenv run pytest

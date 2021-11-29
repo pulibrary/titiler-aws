@@ -5,7 +5,9 @@ from aws_cdk import (
         aws_s3 as s3,
         aws_apigatewayv2,
         aws_apigatewayv2_integrations,
-        aws_lambda
+        aws_lambda,
+        aws_cloudfront,
+        aws_cloudfront_origins,
         )
 
 
@@ -65,4 +67,28 @@ class TitilerServiceStack(core.Stack):
                 handler=lambda_function
             ),
         )
-        core.CfnOutput(self, "Endpoint", value=api.url)
+
+        api_domain = f'{api.http_api_id}.execute-api.{core.Stack.of(self).region}.amazonaws.com'
+
+        # Cloudfront
+        cache_policy = aws_cloudfront.CachePolicy(self, "titilerCachePolicy",
+            cache_policy_name="TitilerPolicy",
+            comment="Cache policy for TiTiler",
+            default_ttl=core.Duration.days(365),
+            min_ttl=core.Duration.days(365),
+            max_ttl=core.Duration.days(365),
+            query_string_behavior=aws_cloudfront.CacheQueryStringBehavior.all(),
+            enable_accept_encoding_gzip=True,
+            enable_accept_encoding_brotli=True
+        )
+        distribution = aws_cloudfront.Distribution(self, "titilerDistCustomPolicy",
+            default_behavior=aws_cloudfront.BehaviorOptions(
+                origin=aws_cloudfront_origins.HttpOrigin(api_domain),
+                cache_policy=cache_policy,
+                allowed_methods=aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+                viewer_protocol_policy=aws_cloudfront.ViewerProtocolPolicy.HTTPS_ONLY
+            )
+        )
+
+        core.CfnOutput(self, "API Endpoint", value=api.url)
+        core.CfnOutput(self, "Cloudfront Endpoint", value=distribution.domain_name)
