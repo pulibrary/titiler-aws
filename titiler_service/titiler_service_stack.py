@@ -52,13 +52,13 @@ class TitilerServiceStack(core.Stack):
         # Rewrite Lambda Definition
         rewrite_function = aws_lambda.Function(
             self,
-            f"titiler-rewrite-lambda",
+            f"titiler-rewrite-edge-lambda",
             runtime=aws_lambda.Runtime.PYTHON_3_8,
             handler="rewrite_handler.handler",
-            code=aws_lambda.Code.asset("./resources")
+            code=aws_lambda.Code.from_asset("./resources")
         )
 
-        edge_lambda = aws_cloudfront.EdgeLambda(
+        rewrite_edge_lambda = aws_cloudfront.EdgeLambda(
             event_type=aws_cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
             function_version=rewrite_function.current_version,
             include_body=False
@@ -102,7 +102,7 @@ class TitilerServiceStack(core.Stack):
                 cache_policy=cache_policy,
                 allowed_methods=aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
                 viewer_protocol_policy=aws_cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-                edge_lambdas=[edge_lambda]
+                edge_lambdas=[rewrite_edge_lambda]
             )
         )
 
