@@ -49,16 +49,22 @@ pipenv sync
 pipenv shell
 ```
 
+## Check that changes are valid
+
+```
+cdk synth
+```
+
 ## Deploy TiTiler
 
-1. Synthesize the CloudFormation template for this code
+1. Deploy the staging stack
   ```
-  cdk synth
+  cdk --profile titiler-deploy deploy titiler-staging
   ```
 
-2. Deploy the stack
+1. Deploy the production stack
   ```
-  cdk --profile titiler-deploy deploy
+  cdk --profile titiler-deploy deploy titiler-production
   ```
 
 To add additional dependencies, for example other CDK libraries, just add

@@ -12,7 +12,7 @@ from aws_cdk import (
 
 
 class TitilerServiceStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, construct_id: str, stage: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # Environment Variables
@@ -32,7 +32,7 @@ class TitilerServiceStack(core.Stack):
         # Lambda Function Definition
         lambda_function = aws_lambda.Function(
             self,
-            f"titiler-service-lambda",
+            f"titiler-{stage}-TitilerFuntion",
             runtime=aws_lambda.Runtime.PYTHON_3_8,
             code=aws_lambda.Code.from_asset(
                 path=os.path.abspath("./"),
@@ -53,7 +53,7 @@ class TitilerServiceStack(core.Stack):
         permission = iam.PolicyStatement(
             actions=["s3:GetObject"],
             resources=[
-                "arn:aws:s3:::pul-tile-images/*",
+                f"arn:aws:s3:::figgy-geo-{stage}/*",
                 "arn:aws:s3:::*/*"
             ],
         )
@@ -62,7 +62,7 @@ class TitilerServiceStack(core.Stack):
         # API Gateway
         api = aws_apigatewayv2.HttpApi(
             self,
-            f"titiler-service-endpoint",
+            f"titiler-{stage}-endpoint",
             default_integration=aws_apigatewayv2_integrations.LambdaProxyIntegration(
                 handler=lambda_function
             ),
@@ -71,8 +71,8 @@ class TitilerServiceStack(core.Stack):
         api_domain = f'{api.http_api_id}.execute-api.{core.Stack.of(self).region}.amazonaws.com'
 
         # Cloudfront
-        cache_policy = aws_cloudfront.CachePolicy(self, "titilerCachePolicy",
-            cache_policy_name="TitilerPolicy",
+        cache_policy = aws_cloudfront.CachePolicy(self, f"titiler-{stage}-CachePolicy",
+            cache_policy_name=f"titiler-{stage}-CachePolicy",
             comment="Cache policy for TiTiler",
             default_ttl=core.Duration.days(365),
             min_ttl=core.Duration.days(365),
@@ -81,7 +81,7 @@ class TitilerServiceStack(core.Stack):
             enable_accept_encoding_gzip=True,
             enable_accept_encoding_brotli=True
         )
-        distribution = aws_cloudfront.Distribution(self, "titilerDistCustomPolicy",
+        distribution = aws_cloudfront.Distribution(self, f"titiler-{stage}-DistPolicy",
             default_behavior=aws_cloudfront.BehaviorOptions(
                 origin=aws_cloudfront_origins.HttpOrigin(api_domain),
                 cache_policy=cache_policy,

@@ -8,7 +8,7 @@ def test_synthesizes_properly():
     app = cdk.App()
 
     # Create the stack
-    titiler_stack = TitilerServiceStack(app, "TitilerServiceStack")
+    titiler_stack = TitilerServiceStack(app, "titiler-production", stage="production")
 
     # Synthesize the stack and build template
     template = Template.from_stack(titiler_stack)
