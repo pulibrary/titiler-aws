@@ -8,6 +8,7 @@ from aws_cdk import (
         aws_lambda,
         aws_cloudfront,
         aws_cloudfront_origins,
+        aws_certificatemanager
         )
 
 
@@ -70,6 +71,17 @@ class TitilerServiceStack(core.Stack):
 
         api_domain = f'{api.http_api_id}.execute-api.{core.Stack.of(self).region}.amazonaws.com'
 
+        # Certificate
+        if stage == "staging":
+            custom_domain = "map-tiles-staging.princeton.edu"
+        else:
+            custom_domain = "map-tiles.princeton.edu"
+
+        certificate = aws_certificatemanager.Certificate(self, f"titiler-{stage}-Certificate",
+            domain_name=custom_domain,
+            validation=aws_certificatemanager.CertificateValidation.from_dns()
+        )
+
         # Cloudfront
         cache_policy = aws_cloudfront.CachePolicy(self, f"titiler-{stage}-CachePolicy",
             cache_policy_name=f"titiler-{stage}-CachePolicy",
@@ -82,6 +94,8 @@ class TitilerServiceStack(core.Stack):
             enable_accept_encoding_brotli=True
         )
         distribution = aws_cloudfront.Distribution(self, f"titiler-{stage}-DistPolicy",
+            certificate=certificate,
+            domain_names=[custom_domain],
             default_behavior=aws_cloudfront.BehaviorOptions(
                 origin=aws_cloudfront_origins.HttpOrigin(api_domain),
                 cache_policy=cache_policy,
