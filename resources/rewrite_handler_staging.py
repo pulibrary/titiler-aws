@@ -11,7 +11,7 @@ def handler(event, context):
     request = event['Records'][0]['cf']['request']
     params = {k : v[0] for k, v in parse_qs(request['querystring']).items()}
 
-    if ('id' in params):
+    if ('id' in params and 'url' not in params):
             s3_root = "s3://figgy-geo-staging"
 
             if ('mosaicjson' in request['uri']):

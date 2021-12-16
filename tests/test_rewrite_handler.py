@@ -8,6 +8,19 @@ def test_rewrites_mosaic_id_production():
     output = handler_production(event, {})
     assert output['querystring'] == 'id=banana&url=s3%3A%2F%2Ffiggy-geo-production%2Fba%2Fna%2Fna%2Fbanana%2Fmosaic.json'
 
+# Don't re-process URL if one is given.
+def test_keeps_existing_uri_production():
+    event = {'Records': [{'cf': {'request': {'uri':
+      'https://test.com/mosaicjson', 'querystring': 'id=banana&url=test' }}}]}
+    output = handler_production(event, {})
+    assert output['querystring'] == 'id=banana&url=test'
+
+# Don't re-process URL if one is given.
+def test_keeps_existing_uri_staging():
+    event = {'Records': [{'cf': {'request': {'uri':
+      'https://test.com/mosaicjson', 'querystring': 'id=banana&url=test' }}}]}
+    output = handler_staging(event, {})
+    assert output['querystring'] == 'id=banana&url=test'
 
 def test_rewrites_cog_id_production():
     event = {'Records': [{'cf': {'request': {'uri': 'https://test.com/cog', 'querystring': 'id=banana'}}}]}
