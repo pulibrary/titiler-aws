@@ -19,6 +19,9 @@ def handler(event, context):
             else:
                 file_name = 'display_raster.tif'
 
+            # Strategy - if it's Mosaic URL, then fetch S3 URL from
+            # https://figgy.princeton.edu/concern/raster_resources/<id>/mosaic.json,
+            # parse JSON and get URI parameter.
             item_id = params['id']
             item_url = f"{s3_root}/{item_id[0:2]}/{item_id[2:4]}/{item_id[4:6]}/{item_id}/{file_name}"
 
