@@ -1,5 +1,6 @@
 from urllib.parse import parse_qs, urlencode
-import requests
+import urllib3
+import json
 
 # This is a viewer request function that rewrites id parameters to url parameters.
 # Examples:
@@ -36,5 +37,6 @@ def figgy_uri(figgy_id):
     return f"https://figgy-staging.princeton.edu/concern/raster_resources/{figgy_id}/mosaic.json"
 
 def figgy_s3_url(figgy_id):
-    resp = requests.get(url=figgy_uri(figgy_id))
-    return resp.json()["uri"]
+    http = urllib3.PoolManager()
+    resp = http.request('GET', figgy_uri(figgy_id))
+    return json.loads(resp.data.decode('utf8'))["uri"]
