@@ -27,8 +27,7 @@ class TitilerServiceStack(core.Stack):
             "PYTHONWARNINGS": "ignore",
             "VSI_CACHE": "TRUE",
             "VSI_CACHE_SIZE": "5000000",  # 5 MB (per file-handle)
-            "RIO_TILER_MAX_THREADS": "1",
-            "MAX_THREADS": "0" # turn off rio-tiler threading, better for lamda
+            "RIO_TILER_MAX_THREADS": "1" # turn off rio-tiler threading, better for lamda
         }
 
         # Lambda Function Definition
