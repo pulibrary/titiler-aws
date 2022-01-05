@@ -18,10 +18,12 @@ def handler(event, context):
 
             if ('mosaicjson' in request['uri']):
                 # Strategy - if it's Mosaic URL, then fetch S3 URL from
+                # https://map-tiles-staging.princeton.edu/resources/<id>,
+                # which caches data from
                 # https://figgy.princeton.edu/concern/raster_resources/<id>/mosaic.json,
                 # parse JSON and get URI parameter.
                 item_id = params['id']
-                item_url = figgy_s3_url(item_id)
+                item_url = s3_url(item_id)
             else:
                 file_name = 'display_raster.tif'
                 item_id = params['id']
@@ -33,10 +35,10 @@ def handler(event, context):
 
     return request
 
-def figgy_uri(figgy_id):
-    return f"https://figgy-staging.princeton.edu/concern/raster_resources/{figgy_id}/mosaic.json"
+def resource_uri(resource_id):
+    return f"https://map-tiles-staging.princeton.edu/resources/{resource_id}"
 
-def figgy_s3_url(figgy_id):
+def s3_url(resource_id):
     http = urllib3.PoolManager()
-    resp = http.request('GET', figgy_uri(figgy_id))
+    resp = http.request('GET', resource_uri(resource_id))
     return json.loads(resp.data.decode('utf8'))["uri"]

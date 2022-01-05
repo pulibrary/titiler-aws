@@ -17,6 +17,9 @@ logging.getLogger("mangum.http").setLevel(logging.ERROR)
 # Used in rewrite_handler to fetch mosaic.json URL from a resource id
 @app.get("/resources/{resource_id}")
 def resource_info(resource_id: str, response: Response):
+    # Set TTL of respone to 10 minutues.
+    # Adding a Cache-Control: max-age directive overrides the default Cloudfront TTL
+    # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html#ExpirationDownloadDist
     response.headers["Cache-Control"] = "max-age=600"
     return fetch_data(resource_id)
 
