@@ -30,7 +30,9 @@ def handler(event, context):
                 item_url = f"{s3_root}/{item_id[0:2]}/{item_id[2:4]}/{item_id[4:6]}/{item_id}/{file_name}"
 
 
+            # Replace id param with url param
             params['url'] = item_url
+            params.pop('id')
             request['querystring'] = urlencode(params)
 
     return request
