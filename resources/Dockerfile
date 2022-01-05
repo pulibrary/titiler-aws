@@ -2,7 +2,7 @@ FROM lambci/lambda:build-python3.8
 
 WORKDIR /tmp
 
-RUN pip install titiler.application mangum>=0.10.0 -t /var/task --no-binary numpy,pydantic
+RUN pip install titiler.application mangum>=0.10.0 -t /var/task --no-binary numpy,pydantic,urllib3
 
 # Reduce package size and remove useless files
 RUN cd /var/task && find . -type f -name '*.pyc' | while read f; do n=$(echo $f | sed 's/__pycache__\///' | sed 's/.cpython-[2-3][0-9]//'); cp $f $n; done;
