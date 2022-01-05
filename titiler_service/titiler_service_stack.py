@@ -105,7 +105,6 @@ class TitilerServiceStack(core.Stack):
             cache_policy_name=f"titiler-{stage}-CachePolicy",
             comment="Cache policy for TiTiler",
             default_ttl=core.Duration.days(365),
-            min_ttl=core.Duration.days(365),
             max_ttl=core.Duration.days(365),
             query_string_behavior=aws_cloudfront.CacheQueryStringBehavior.all(),
             enable_accept_encoding_gzip=True,
