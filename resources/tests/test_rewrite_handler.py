@@ -1,8 +1,11 @@
 import pytest
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from urllib3_mock import Responses
-from resources.rewrite_handler_production import handler as handler_production
-from resources.rewrite_handler_staging import handler as handler_staging
+from rewrite_handler_production import handler as handler_production
+from rewrite_handler_staging import handler as handler_staging
 
 responses = Responses('urllib3')
 
