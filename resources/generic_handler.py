@@ -2,6 +2,7 @@ from urllib.parse import parse_qs, urlencode
 import urllib3
 import json
 
+
 class GenericHandler:
     def __init__(self, stage):
         self.stage = stage

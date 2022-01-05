@@ -1,5 +1,5 @@
 from urllib.parse import parse_qs, urlencode
-from .generic_handler import GenericHandler
+from generic_handler import GenericHandler
 
 # This is a viewer request function that rewrites id parameters to url parameters.
 # Examples:
