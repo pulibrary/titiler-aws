@@ -124,7 +124,7 @@ class TitilerServiceStack(core.Stack):
 
         # Add base url env var so TiTiler generates correct tile URLs.
         # Used in HostMiddleware.
-        lambda_function.add_environment("TITILER_BASE_URL", distribution.domain_name)
+        lambda_function.add_environment("TITILER_BASE_URL", custom_domain)
 
         core.CfnOutput(self, "API Endpoint", value=api.url)
         core.CfnOutput(self, "Cloudfront Endpoint", value=distribution.domain_name)
