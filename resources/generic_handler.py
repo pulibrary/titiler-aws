@@ -6,6 +6,7 @@ import json
 class GenericHandler:
     def __init__(self, stage):
         self.stage = stage
+        self.item_id = ""
 
     def s3_root(self):
         if self.stage == "production":
@@ -20,17 +21,12 @@ class GenericHandler:
       if ('id' in params and 'url' not in params):
 
               if ('mosaicjson' in request['uri']):
-                  # Strategy - if it's Mosaic URL, then fetch S3 URL from
-                  # https://map-tiles.princeton.edu/resources/<id>,
-                  # which caches data from
-                  # https://figgy.princeton.edu/concern/raster_resources/<id>/mosaic.json,
-                  # parse JSON and get URI parameter.
-                  item_id = params['id']
-                  item_url = self.s3_url(item_id)
+                  self.item_id = params['id']
+                  item_url = self.resource_uri()
               else:
                   file_name = 'display_raster.tif'
-                  item_id = params['id']
-                  item_url = f"{self.s3_root()}/{item_id[0:2]}/{item_id[2:4]}/{item_id[4:6]}/{item_id}/{file_name}"
+                  self.item_id = params['id']
+                  item_url = f"{self.s3_root()}/{self.item_id[0:2]}/{self.item_id[2:4]}/{self.item_id[4:6]}/{self.item_id}/{file_name}"
 
 
               # Replace id param with url param
@@ -40,13 +36,8 @@ class GenericHandler:
 
       return request
 
-    def resource_uri(self, resource_id):
+    def resource_uri(self):
         if self.stage == "production":
-            return f"https://map-tiles.princeton.edu/resources/{resource_id}"
+            return f"https://map-tiles.princeton.edu/resources/{self.item_id}"
         else:
-            return f"https://map-tiles-staging.princeton.edu/resources/{resource_id}"
-
-    def s3_url(self, resource_id):
-        http = urllib3.PoolManager()
-        resp = http.request('GET', self.resource_uri(resource_id))
-        return json.loads(resp.data.decode('utf8'))["uri"]
+            return f"https://map-tiles-staging.princeton.edu/resources/{self.item_id}"
