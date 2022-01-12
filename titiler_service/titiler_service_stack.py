@@ -8,7 +8,9 @@ from aws_cdk import (
         aws_lambda,
         aws_cloudfront,
         aws_cloudfront_origins,
-        aws_certificatemanager
+        aws_certificatemanager,
+        aws_events,
+        aws_events_targets
         )
 
 
@@ -128,3 +130,11 @@ class TitilerServiceStack(core.Stack):
 
         core.CfnOutput(self, "API Endpoint", value=api.url)
         core.CfnOutput(self, "Cloudfront Endpoint", value=distribution.domain_name)
+
+        # Lambda warmer
+        eventRule = aws_events.Rule(
+          self,
+          f"titiler-{stage}-warmer",
+          schedule=aws_events.Schedule.cron(minute="0/15")
+        )
+        eventRule.add_target(aws_events_targets.LambdaFunction(lambda_function))

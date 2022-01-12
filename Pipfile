@@ -18,6 +18,8 @@ pytest = "==6.2.5"
 "aws-cdk.aws-certificatemanager" = "~=1.126.0"
 requests-mock = "*"
 urllib3-mock = "*"
+"aws-cdk.aws-events" = "~=1.126.0"
+"aws-cdk.aws-events-targets" = "~=1.126.0"
 
 [dev-packages]
 
