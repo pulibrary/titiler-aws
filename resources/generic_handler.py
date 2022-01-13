@@ -21,8 +21,6 @@ class GenericHandler:
 
               if ('mosaicjson' in request['uri']):
                   # Strategy - if it's Mosaic URL, then fetch S3 URL from
-                  # https://map-tiles.princeton.edu/resources/<id>,
-                  # which caches data from
                   # https://figgy.princeton.edu/concern/raster_resources/<id>/mosaic.json,
                   # parse JSON and get URI parameter.
                   item_id = params['id']
@@ -42,9 +40,9 @@ class GenericHandler:
 
     def resource_uri(self, resource_id):
         if self.stage == "production":
-            return f"https://map-tiles.princeton.edu/resources/{resource_id}"
+            return f"https://figgy.princeton.edu/concern/raster_resources/{resource_id}/mosaic"
         else:
-            return f"https://map-tiles-staging.princeton.edu/resources/{resource_id}"
+            return f"https://figgy-staging.princeton.edu/concern/raster_resources/{resource_id}/mosaic"
 
     def s3_url(self, resource_id):
         http = urllib3.PoolManager()
