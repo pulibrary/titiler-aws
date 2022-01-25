@@ -40,9 +40,9 @@ class GenericHandler:
 
     def resource_uri(self, resource_id):
         if self.stage == "production":
-            return f"https://figgy.princeton.edu/concern/raster_resources/{resource_id}/mosaic"
+            return f"https://figgy.princeton.edu/tilemetadata/{resource_id}"
         else:
-            return f"https://figgy-staging.princeton.edu/concern/raster_resources/{resource_id}/mosaic"
+            return f"https://figgy-staging.princeton.edu/tilemetadata/{resource_id}"
 
     def s3_url(self, resource_id):
         http = urllib3.PoolManager()
