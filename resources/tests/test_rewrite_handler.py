@@ -11,7 +11,7 @@ responses = Responses('urllib3')
 
 @responses.activate
 def test_rewrites_mosaic_id_production():
-    responses.add('GET', '/concern/raster_resources/banana/mosaic',
+    responses.add('GET', '/tilemetadata/banana',
             body='{"uri": "s3://figgy-geo-production/ba/na/na/banana/mosaic-34.json"}',
             status=200,
             content_type='application/json')
@@ -40,7 +40,7 @@ def test_rewrites_cog_id_production():
 
 @responses.activate
 def test_rewrites_mosaic_id_staging():
-    responses.add('GET', '/concern/raster_resources/banana/mosaic',
+    responses.add('GET', '/tilemetadata/banana',
             body='{"uri": "s3://figgy-geo-staging/ba/na/na/banana/mosaic-34.json"}',
             status=200,
             content_type='application/json')
