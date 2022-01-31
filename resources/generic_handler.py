@@ -18,7 +18,6 @@ class GenericHandler:
       params = {k : v[0] for k, v in parse_qs(request['querystring']).items()}
 
       if ('id' in params and 'url' not in params):
-
               if ('mosaicjson' in request['uri']):
                   # Strategy - if it's Mosaic URL, then fetch S3 URL from
                   # https://figgy.princeton.edu/concern/raster_resources/<id>/mosaic.json,
@@ -30,12 +29,15 @@ class GenericHandler:
                   item_id = params['id']
                   item_url = f"{self.s3_root()}/{item_id[0:2]}/{item_id[2:4]}/{item_id[4:6]}/{item_id}/{file_name}"
 
-
               # Replace id param with url param
               params['url'] = item_url
               params.pop('id')
-              request['querystring'] = urlencode(params)
 
+      # Add rescale parameter to ensure tile images are rendered correctly
+      if ('rescale' not in params):
+          params['rescale'] = '0,255'
+
+      request['querystring'] = urlencode(params)
       return request
 
     def resource_uri(self, resource_id):
