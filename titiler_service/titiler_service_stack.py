@@ -84,7 +84,8 @@ class TitilerServiceStack(core.Stack):
         api = aws_apigatewayv2.HttpApi(
             self,
             f"titiler-{stage}-endpoint",
-            default_integration=aws_apigatewayv2_integrations.LambdaProxyIntegration(
+            default_integration=aws_apigatewayv2_integrations.HttpLambdaIntegration(
+                "lambdaIntegration",
                 handler=lambda_function
             ),
         )
@@ -119,7 +120,9 @@ class TitilerServiceStack(core.Stack):
                 origin=aws_cloudfront_origins.HttpOrigin(api_domain),
                 cache_policy=cache_policy,
                 allowed_methods=aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+                response_headers_policy=aws_cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS_WITH_PREFLIGHT,
                 viewer_protocol_policy=aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+                origin_request_policy=aws_cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
                 edge_lambdas=[rewrite_edge_lambda]
             )
         )
