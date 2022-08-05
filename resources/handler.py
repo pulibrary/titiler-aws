@@ -13,4 +13,4 @@ app.add_middleware(middleware.HostMiddleware)
 logging.getLogger("mangum.lifespan").setLevel(logging.ERROR)
 logging.getLogger("mangum.http").setLevel(logging.ERROR)
 
-handler = Mangum(app, lifespan="auto", log_level="error")
+handler = Mangum(app, lifespan="auto")
