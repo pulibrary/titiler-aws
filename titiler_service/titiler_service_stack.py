@@ -80,17 +80,12 @@ class TitilerServiceStack(core.Stack):
         )
         lambda_function.add_to_role_policy(permission)
 
-        # API Gateway
-        api = aws_apigatewayv2.HttpApi(
-            self,
-            f"titiler-{stage}-endpoint",
-            default_integration=aws_apigatewayv2_integrations.HttpLambdaIntegration(
-                "lambdaIntegration",
-                handler=lambda_function
-            ),
+        # Add function url to primary lambda
+        # Use instead of API gateway to bypass 30 second gateway timeout limit
+        lambda_url = lambda_function.add_function_url(
+            auth_type=aws_lambda.FunctionUrlAuthType.NONE
         )
-
-        api_domain = f'{api.http_api_id}.execute-api.{core.Stack.of(self).region}.amazonaws.com'
+        function_url = core.Fn.select(2, core.Fn.split('/', lambda_url.url))
 
         # Certificate
         if stage == "staging":
@@ -118,7 +113,7 @@ class TitilerServiceStack(core.Stack):
             certificate=certificate,
             domain_names=[custom_domain],
             default_behavior=aws_cloudfront.BehaviorOptions(
-                origin=aws_cloudfront_origins.HttpOrigin(api_domain),
+                origin=aws_cloudfront_origins.HttpOrigin(function_url),
                 cache_policy=cache_policy,
                 allowed_methods=aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
                 response_headers_policy=aws_cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS_WITH_PREFLIGHT,
@@ -132,7 +127,7 @@ class TitilerServiceStack(core.Stack):
         # Used in HostMiddleware.
         lambda_function.add_environment("TITILER_BASE_URL", custom_domain)
 
-        core.CfnOutput(self, "API Endpoint", value=api.url)
+        core.CfnOutput(self, "Function URL", value=function_url)
         core.CfnOutput(self, "Cloudfront Endpoint", value=distribution.domain_name)
 
         # Lambda warmer
