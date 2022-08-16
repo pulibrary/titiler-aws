@@ -109,6 +109,21 @@ class TitilerServiceStack(core.Stack):
             enable_accept_encoding_gzip=True,
             enable_accept_encoding_brotli=True
         )
+        response_headers_policy = aws_cloudfront.ResponseHeadersPolicy(self, f"titiler-{stage}-ResponseHeadersPolicy",
+            response_headers_policy_name=f"titiler-{stage}-ResponseHeadersPolicy",
+            comment="Custom response policy with cache-control max-age set to match TTL",
+            cors_behavior=aws_cloudfront.ResponseHeadersCorsBehavior(
+                access_control_allow_credentials=False,
+                access_control_allow_headers=["*"],
+                access_control_allow_methods=["ALL"],
+                access_control_allow_origins=["*"],
+                access_control_expose_headers=["*"],
+                origin_override=True
+            ),
+            custom_headers_behavior=aws_cloudfront.ResponseCustomHeadersBehavior(
+                custom_headers=[aws_cloudfront.ResponseCustomHeader(header="Cache-Control", value="public, max-age= 31536000", override=True)]
+            )
+        )
         distribution = aws_cloudfront.Distribution(self, f"titiler-{stage}-DistPolicy",
             certificate=certificate,
             domain_names=[custom_domain],
@@ -116,7 +131,7 @@ class TitilerServiceStack(core.Stack):
                 origin=aws_cloudfront_origins.HttpOrigin(function_url),
                 cache_policy=cache_policy,
                 allowed_methods=aws_cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-                response_headers_policy=aws_cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS_WITH_PREFLIGHT,
+                response_headers_policy=response_headers_policy,
                 viewer_protocol_policy=aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 origin_request_policy=aws_cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
                 edge_lambdas=[rewrite_edge_lambda]
